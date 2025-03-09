@@ -1,13 +1,13 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
+import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import routes from "./routes/index.js";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -17,14 +17,11 @@ mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/socialNetwo
   useUnifiedTopology: true,
 });
 
-mongoose.connection.once("open", () => {
-  console.log("🟢 Conectado a MongoDB");
-});
+mongoose.connection.once("open", () => console.log("🟢 Conectado a MongoDB"));
 
-// Importar rutas
-app.use(require("./routes"));
+// Configurar rutas
+app.use(routes);
 
-// Iniciar servidor
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });
